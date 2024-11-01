@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Copyright Notice Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+        button {
+            margin-top: 10px;
+        }
+        .notice {
+            margin-top: 20px;
+            white-space: pre-wrap; /* Preserve line breaks */
+            border: 1px solid #ccc;
+            padding: 10px;
+            background: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Copyright Notice Generator</h1>
+
+<label for="holderName">Name of the Copyright Holder:</label>
+<input type="text" id="holderName" placeholder="Enter your name" required>
+
+<label for="year">Year:</label>
+<input type="text" id="year" value="" disabled>
+
+<h2>Select Options</h2>
+<input type="checkbox" id="watermark" checked>
+<label for="watermark">LiGen Watermark</label><br>
+<input type="checkbox" id="warranty">
+<label for="warranty">Warranty Claim</label><br>
+<input type="checkbox" id="liability">
+<label for="liability">Liability Claim</label><br>
+<input type="checkbox" id="modification">
+<label for="modification">Modification Notice</label><br>
+<input type="checkbox" id="update">
+<label for="update">Update Notice</label><br>
+<input type="checkbox" id="customNotice">
+<label for="customNotice">Custom Notice</label><br>
+
+<button onclick="generateNotice()">Generate Notice</button>
+<button onclick="copyNotice()">Copy to Clipboard</button>
+<button onclick="editNotice()">Edit Notice</button>
+
+<h2>Your Copyright Notice</h2>
+<div class="notice" id="outputNotice"></div>
+
+<script>
+    document.getElementById('year').value = new Date().getFullYear();
+
+    function generateNotice() {
+        const name = document.getElementById('holderName').value.trim();
+        const year = document.getElementById('year').value;
+        let output = `${year} (c) ${name}\n`;
+
+        const watermark = "This Software License was Generated with LiGen. View https://github.com/juanvel4000/license-gen for more info.";
+        const warrantyClaim = "THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED.";
+        const liabilityClaim = "The authors are not responsible for any damage caused by the use of this software.";
+        const modificationNotice = "Modifications to this software are permitted, provided credit is given to the original authors.";
+        const updateNotice = "This software may receive updates or enhancements in the future.";
+        const customNotice = "Users are encouraged to review the software’s terms and conditions.";
+
+        if (document.getElementById('watermark').checked) {
+            output += `${watermark}\n`;
+        }
+        if (document.getElementById('warranty').checked) {
+            output += `${warrantyClaim}\n`;
+        }
+        if (document.getElementById('liability').checked) {
+            output += `${liabilityClaim}\n`;
+        }
+        if (document.getElementById('modification').checked) {
+            output += `${modificationNotice}\n`;
+        }
+        if (document.getElementById('update').checked) {
+            output += `${updateNotice}\n`;
+        }
+        if (document.getElementById('customNotice').checked) {
+            output += `${customNotice}\n`;
+        }
+
+        document.getElementById('outputNotice').textContent = output;
+    }
+
+    function copyNotice() {
+        const outputNotice = document.getElementById('outputNotice').textContent;
+        navigator.clipboard.writeText(outputNotice).then(() => {
+            alert("Copyright notice copied to clipboard!");
+        }).catch(err => {
+            alert("Failed to copy: " + err);
+        });
+    }
+
+    function editNotice() {
+        const outputNotice = document.getElementById('outputNotice').textContent;
+        document.getElementById('holderName').value = outputNotice.split('\n')[0].split(' (c) ')[1].trim();
+        // Reset checkboxes based on the output notice content
+        document.getElementById('watermark').checked = outputNotice.includes("LiGen Watermark");
+        document.getElementById('warranty').checked = outputNotice.includes("WARRANTY OF ANY KIND");
+        document.getElementById('liability').checked = outputNotice.includes("not responsible for any damage");
+        document.getElementById('modification').checked = outputNotice.includes("Modifications to this software");
+        document.getElementById('update').checked = outputNotice.includes("updates or enhancements");
+        document.getElementById('customNotice').checked = outputNotice.includes("review the software’s terms and conditions");
+    }
+</script>
+
+</body>
+</html>
